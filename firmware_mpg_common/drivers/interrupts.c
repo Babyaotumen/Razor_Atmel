@@ -30,6 +30,8 @@ Global variable definitions with scope limited to this local application.
 Variables names shall start with "ISR_" and be declared as static.
 ***********************************************************************************************************************/
 
+static u32 ISR_u32ButtonInterruptCount=0;
+
 
 /**********************************************************************************************************************
 Interrupt Service Routine Definitions
@@ -156,7 +158,7 @@ void SysTick_Handler(void)
   }
     
 } /* end SysTickHandler(void) */
-
+ 
 
 /*----------------------------------------------------------------------------------------------------------------------
 ISR: PIOA_IrqHandler
@@ -188,7 +190,8 @@ void PIOA_IrqHandler(void)
   
   /* Check if any port A buttons interrupted */
   if(u32ButtonInterrupts)
-  {
+  {   
+    ISR_u32ButtonInterruptCount++;  
     /* Parse through all the buttons to find those that have interrupted */
     for(u8 i = 0; i < TOTAL_BUTTONS; i++)
     {

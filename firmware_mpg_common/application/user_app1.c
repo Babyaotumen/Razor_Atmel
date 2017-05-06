@@ -91,12 +91,15 @@ void UserApp1Initialize(void)
   /* If good initialization, set state to Idle */
   if( 1 )
   {
+    //LedBlink(GREEN, LED_2HZ);
+
     UserApp1_StateMachine = UserApp1SM_Idle;
   }
   else
   {
     /* The task isn't properly initialized, so shut it down and don't run */
-    UserApp1_StateMachine = UserApp1SM_FailedInit;
+    //UserApp1_StateMachine = UserApp1SM_FailedInit;
+    UserApp1_StateMachine = all_led;
   }
 
 } /* end UserApp1Initialize() */
@@ -131,7 +134,44 @@ void UserApp1RunActiveState(void)
 /**********************************************************************************************************************
 State Machine Function Definitions
 **********************************************************************************************************************/
+//
+void double_led(void)
+{u8 u8_counter=0;
+ if(G_u32SystemTime1ms%500==0)
+   for(u8_counter=0;u8_counter<=4;u8_counter++)
+   {
+     LedOn(u8_counter);
+     //LedOn(RED);
+   } 
+  if(G_u32SystemTime1ms%2000==0)
+  {
+    for(u8_counter=0;u8_counter<=7;u8_counter++)
+      LedOff(u8_counter);
+  }
+ if(G_u32SystemTime1s%10000==0)
+  UserApp1_StateMachine=all_led;
+   
+}
 
+///all led light
+void all_led(void)
+{u8 u8_counter=.0;
+  if(G_u32SystemTime1ms%1000==0)
+  {
+    for(u8_counter=0;u8_counter<=7;u8_counter++)
+    {
+      LedOn(u8_counter);
+      //LedOn(RED);
+    }
+  }
+  if(G_u32SystemTime1ms%2000==0)
+  {
+    for(u8_counter=0;u8_counter<=7;u8_counter++)
+      LedOff(u8_counter);
+  }
+  if(G_u32SystemTime1s%1000==10)
+    UserApp1_StateMachine=double_led;
+}
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
